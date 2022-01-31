@@ -12,7 +12,7 @@ class Shows(object):
     def __init__(self, sonarr: object, config: dict):
         self.tags = sonarr.get_tags()
         self.series = sonarr.get_series()
-        self.gitbase = Path("/config/anime-offline-database") #Path(os.path.expanduser(config["paths"]["anidb"]))
+        self.gitbase = "/config/anime-offline-database"
         logging.debug(f"Git pull output:\t{git.cmd.Git(self.gitbase).pull()}")
         self.anidb = json.loads(open(Path(f"{self.gitbase}/anime-offline-database-minified.json")).read())["data"]
         self.aggregate = list()
@@ -65,12 +65,17 @@ def add_tags(tags: list, tagmap: object):
 
 
 def write_tags(shows: object, sonarr: object):
+    shows.tags = sonarr.get_tags()
+    previous_tags = shows.tags
     shows.tags = aggregate_tags(drop_tags=shows.drop_tags, input_tags=[show.tags for show in shows.aggregate])
     for show in shows.aggregate:
         logging.info(f"Processing tags for {show.title}")
         show.sonarr = [tvShow for tvShow in shows.series if tvShow["title"]==show.title][0]
         add_tags(tags=aggregate_tags(drop_tags=shows.drop_tags, input_tags=show.tags), tagmap=sonarr.get_tags())
-        shows.tags = sonarr.get_tags()
+        try:
+            shows.tags = sonarr.get_tags()
+        except:
+            shows.tags = previous_tags
         show.tag_ids = sorted([i.get("id") for i in shows.tags if (i.get("label") in show.tags)])
         show.sonarr.update({"tags": show.tag_ids})
         try:
@@ -85,12 +90,8 @@ def write_tags(shows: object, sonarr: object):
 
 if __name__ == "__main__":
     set_logging()
-
     config = yaml.load(open("config.yaml"), Loader=yaml.FullLoader) if os.path.exists(Path("config.yaml")) else dict()
-    sonarr = SonarrAPI(
-        url=os.environ.get("SONARR_URL"),
-        apikey=os.environ.get("SONARR_API")
-    )
+    sonarr = SonarrAPI(url=os.environ["SONARR_URL"], apikey=os.environ["SONARR_API"])
     shows = Shows(sonarr=sonarr, config=config)
     for s in shows.series:
         show = Show(s)
