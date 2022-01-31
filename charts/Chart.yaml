@@ -29,11 +29,6 @@ maintainers:
 
 home: https://github.com/jd4883/sonarr-genre-tagger/charts
 
-# dependencies:
-#   - name: common
-#     repository: https://library-charts.k8s-at-home.com
-#     version: 4.3.0
-
 annotations:
   artifacthub.io/changes: |
     - kind: changed
