@@ -1,0 +1,2 @@
+# sonarr-genre-tagger
+A simple script that queries sonarr's API for genre info. It also picks up an offline copy of anidb's database and queries both and aggregates the two together. It parses this tag information, supports creating a blocklist of tags to not use, as well as find and replace conditions, and then creates tags in sonarr (if not present, otherwise uses what exists) and stores these in sonarr. This projects intended to make the tags an easy point of use for other automation with sonarr once in place.
