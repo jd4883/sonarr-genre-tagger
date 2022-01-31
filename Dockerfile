@@ -24,11 +24,12 @@ ENV \
 	SONARR_URL "http://127.0.0.1:8989/api" \
 	SONARR_API ""
 
-COPY main.py methods /config/
+COPY . /config/
 
-RUN echo "* */1  *  *  * python /config/main.py" > /etc/crontabs/root && \
+RUN echo "0 *  *  *  * python /config/main.py" > /etc/crontabs/root && \
     cat /etc/crontabs/root && \
     git clone https://github.com/manami-project/anime-offline-database.git && \
     chmod +x main.py
+
 
 CMD ["/usr/sbin/crond", "-f", "-d", "8"]
