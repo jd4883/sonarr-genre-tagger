@@ -26,9 +26,12 @@ serviceAccount:
 env:
   secret:
     # may be valid, presumes you are using the sonarr chart with the sonarr namespace. Change to suit your deployment
-    SONARR_URL: http://sonarr.sonarr:8989/api
+    SONARR_URL: "http://sonarr.sonarr:8989/api"
     # ensure you feed in a valid API key when instantiating the chart. Chart will not do anything if this is unset
     SONARR_API: ""
+
+secret:
+  name: app-env-secret
 
 podAnnotations: {}
 

@@ -32,16 +32,17 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           env:
-            - name: "SONARR_URL"
-              valueFrom:
-                secretKeyRef:
-                  key:  url
-                  name: {{ .Release.Name }}-auth
-            - name: "SONARR_API"
-              valueFrom:
-                secretKeyRef:
-                  key:  api
-                  name: {{ .Release.Name }}-auth
+            {{- include "helpers.list-env-variables" . | nindent 12 }}
+            # - name: "SONARR_URL"
+            #   valueFrom:
+            #     secretKeyRef:
+            #       key:  url
+            #       name: {{ .Release.Name }}-auth
+            # - name: "SONARR_API"
+            #   valueFrom:
+            #     secretKeyRef:
+            #       key:  api
+            #       name: {{ .Release.Name }}-auth
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
