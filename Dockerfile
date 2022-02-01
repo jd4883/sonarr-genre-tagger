@@ -5,7 +5,7 @@ USER root
 
 VOLUME /config
 WORKDIR /config
-COPY . /config/
+COPY requirements.txt /config/
 RUN pip install --upgrade pip && \
 	pip install -r requirements.txt && \
 	apk add --no-cache bash \
@@ -30,7 +30,7 @@ ENV \
 	FREQUENCY ${FREQUENCY} \
 	APPEND_TO_CRON_END  ${APPEND_TO_CRON_END}
 
-
+COPY . /config/
 RUN echo "0 */${FREQUENCY} * * * python /config/main.py ${APPEND_TO_CRON_END}" > /etc/crontabs/root && \
     cat /etc/crontabs/root && \
     git clone https://github.com/manami-project/anime-offline-database.git && \
