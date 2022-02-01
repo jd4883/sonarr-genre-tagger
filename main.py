@@ -17,13 +17,14 @@ class Shows(object):
         self.anidb = json.loads(open(Path(f"{self.gitbase}/anime-offline-database-minified.json")).read())["data"]
         self.aggregate = list()
         self.drop_tags = config["tagging"].get("drop", [])
-        self.replacement_tags = config["tagging"].get("replacements", {}).update({" ": "_"})
+        self.replacement_tags = config["tagging"].get("replacements", {})
+        self.replacement_tags[" "] = "_" # this doesnt translate nice from a configmap so I injected it; besides tags don't accept spacing in sonarr
 
 class Show(object):
     def __init__(self, show: dict):
         self.title = show.get("title")
-        self.tags = show.get("genres", [])
-        self.tag_ids = show.get("tags", [])
+        self.tags = unique(show.get("genres", []))
+        self.tag_ids = unique(show.get("tags", []))
         self.id = show.get("id")
         self.sonarr = dict()
         self.type = show.get("seriesType")
@@ -49,7 +50,7 @@ def aggregate_tags(drop_tags: list, input_tags: list):
             if tag not in all_tags:
                 all_tags.append(tag)
     [all_tags.remove(i) for i in all_tags if i in drop_tags]
-    return sorted(list(set(all_tags)))
+    return unique(all_tags)
 
 def add_tags(tags: list, tagmap: object):
     for tag in tags:
@@ -62,12 +63,13 @@ def add_tags(tags: list, tagmap: object):
             except:
                 pass
 
-
+def unique(tags):
+    return sorted(list(set(tags)))
 
 def write_tags(shows: object, sonarr: object):
     shows.tags = sonarr.get_tags()
     previous_tags = shows.tags
-    shows.tags = aggregate_tags(drop_tags=shows.drop_tags, input_tags=[show.tags for show in shows.aggregate])
+    shows.tags = aggregate_tags(drop_tags=shows.drop_tags, input_tags=unique([show.tags for show in shows.aggregate]))
     for show in shows.aggregate:
         logging.info(f"Processing tags for {show.title}")
         show.sonarr = [tvShow for tvShow in shows.series if tvShow["title"]==show.title][0]
@@ -76,7 +78,7 @@ def write_tags(shows: object, sonarr: object):
             shows.tags = sonarr.get_tags()
         except:
             shows.tags = previous_tags
-        show.tag_ids = sorted([i.get("id") for i in shows.tags if (i.get("label") in show.tags)])
+        show.tag_ids = unique([i.get("id") for i in shows.tags if (i.get("label") in show.tags)])
         show.sonarr.update({"tags": show.tag_ids})
         try:
             print(f"Tagging has started for {show.title}:\t{show.tags}")
@@ -101,6 +103,6 @@ if __name__ == "__main__":
                 if anime["title"] == show.title:
                     show.tags += anime["tags"]
                     break
-        show.tags = [cleanup_tags(tag=i, replacements=shows.replacement_tags) for i in sorted(list(set(show.tags)))]
+        show.tags = unique([cleanup_tags(tag=i, replacements=shows.replacement_tags) for i in sorted(list(set(show.tags)))])
         shows.aggregate.append(show)
     write_tags(shows=shows, sonarr=sonarr)

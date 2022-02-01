@@ -20,12 +20,18 @@ RUN pip install --upgrade pip && \
 		grep \
         git
 
+ARG \
+	FREQUENCY 3 \
+	APPEND_TO_CRON_END ""
+
 ENV \
 	SONARR_URL "http://127.0.0.1:8989/api" \
-	SONARR_API ""
+	SONARR_API "" \
+	FREQUENCY ${FREQUENCY} \
+	APPEND_TO_CRON_END  ${APPEND_TO_CRON_END}
 
 
-RUN echo "0 *  *  *  * python /config/main.py" > /etc/crontabs/root && \
+RUN echo "0 */${FREQUENCY} * * * python /config/main.py ${APPEND_TO_CRON_END}" > /etc/crontabs/root && \
     cat /etc/crontabs/root && \
     git clone https://github.com/manami-project/anime-offline-database.git && \
     chmod +x main.py
