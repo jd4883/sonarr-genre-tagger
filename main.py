@@ -17,7 +17,7 @@ class Shows(object):
         self.anidb = json.loads(open(Path(f"{self.gitbase}/anime-offline-database-minified.json")).read())["data"]
         self.aggregate = list()
         self.drop_tags = config["tagging"].get("drop", [])
-        self.replacement_tags = config["tagging"].get("replacements", {})
+        self.replacement_tags = config["tagging"].get("replacements", {}).update({" ": "_"})
 
 class Show(object):
     def __init__(self, show: dict):
