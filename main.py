@@ -69,7 +69,7 @@ def unique(tags):
 def write_tags(shows: object, sonarr: object):
     shows.tags = sonarr.get_tags()
     previous_tags = shows.tags
-    shows.tags = aggregate_tags(drop_tags=shows.drop_tags, input_tags=unique([show.tags for show in shows.aggregate]))
+    shows.tags = aggregate_tags(drop_tags=shows.drop_tags, input_tags=[show.tags for show in shows.aggregate])
     for show in shows.aggregate:
         logging.info(f"Processing tags for {show.title}")
         show.sonarr = [tvShow for tvShow in shows.series if tvShow["title"]==show.title][0]
@@ -78,6 +78,7 @@ def write_tags(shows: object, sonarr: object):
             shows.tags = sonarr.get_tags()
         except:
             shows.tags = previous_tags
+        [show.tags.remove(i) for i in show.tags if i in shows.drop_tags]
         show.tag_ids = unique([i.get("id") for i in shows.tags if (i.get("label") in show.tags)])
         show.sonarr.update({"tags": show.tag_ids})
         try:
