@@ -6,10 +6,10 @@ data:
   config.yaml: |
     tagging:
         drop:
-            {{- range .Values.env.tagging.drop }}
+            {{- range .Values.tagging.drop }}
             - {{ . }}
             {{- end }}
         replacements:
-            {{- range $key, $val := .Values.env.tagging.replacements }}
+            {{- range $key, $val := .Values.tagging.replacements }}
             {{ $key }}: {{ $val }}
             {{- end}}

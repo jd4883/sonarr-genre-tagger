@@ -1,3 +1,22 @@
 apiVersion: v1
-entries: {}
-generated: "2022-01-31T15:47:58.305444-08:00"
+entries:
+  sonarr-genre-tagger:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Upgraded `common` chart dependency to version `4.3.0`.
+    apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-01-31T18:04:56.14391-08:00"
+    description: A Helm chart for Kubernetes
+    digest: bd264adf978172eed8ec28fb00ff1adf36e55e68034af18ae99f5434254ef892
+    home: https://github.com/jd4883/sonarr-genre-tagger/charts
+    maintainers:
+    - email: expectedbehaviors@gmail.com
+      name: Jacob Dresdale
+    name: sonarr-genre-tagger
+    type: application
+    urls:
+    - https://github.com/jd4883/sonarr-genre-tagger/charts/sonarr-genre-tagger-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-01-31T18:04:56.141245-08:00"
