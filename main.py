@@ -93,7 +93,8 @@ def write_tags(shows: object, sonarr: object):
 
 if __name__ == "__main__":
     set_logging()
-    config = yaml.load(open("config.yaml"), Loader=yaml.FullLoader) if os.path.exists(Path("config.yaml")) else dict()
+    config_file = "/config/config.yaml"
+    config = yaml.load(open(config_file), Loader=yaml.FullLoader) if os.path.exists(Path(config_file)) else {"tagging": {"drop": [], "replacements": {}}}
     sonarr = SonarrAPI(url=os.environ["SONARR_URL"], apikey=os.environ["SONARR_API"])
     shows = Shows(sonarr=sonarr, config=config)
     for s in shows.series:
