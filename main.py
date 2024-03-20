@@ -6,12 +6,14 @@ import os
 class Shows(object):
     def __init__(self, config: object):
         import json
-        import git
+        import subprocess
         self.tags = config.sonarr.get_tags()
         self.series = config.sonarr.get_series()
-        self.gitbase = "/config/anime-offline-database"
-        config.log.info(f"Git pull output:\t{git.cmd.Git(self.gitbase).pull()}")
-        self.anidb = json.loads(open(Path(f"{self.gitbase}/anime-offline-database-minified.json")).read())["data"]
+        self.repo = "https://github.com/manami-project/anime-offline-database.git"
+        process = subprocess.Popen(["git", "clone", self.repo], stdout=subprocess.PIPE)
+        output = process.communicate()[0]
+        config.log.info(f"Git pull output:\t{output}")
+        self.anidb = json.loads(open(Path(f"/config/anime-offline-database/anime-offline-database-minified.json")).read())["data"]
         self.aggregate = list()
         self.drop_tags = config.file["tagging"].get("drop", [])
         self.replacement_tags = config.file["tagging"].get("replacements", {})
