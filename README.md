@@ -22,7 +22,6 @@ Additionally, you can optionally configure a **config.yaml**. The tooling will p
 
 ## Roadmap / Upcoming
 This was thrown together over the weekend and I would not call it refined just yet. The following items are likely on the horizon, I'm open to PR's with additional feature ideas and improvements:
-* a really easy to use helm chart for kubernetes
 * tighter input validation that eliminates the need for try/except
 * rate limit handling / control of pace on how hard sonarr's API can be hit
 * better logging
