@@ -12,7 +12,7 @@ class Shows(object):
         self.repo = "https://github.com/manami-project/anime-offline-database.git"
         process = subprocess.Popen(["git", "clone", self.repo], stdout=subprocess.PIPE)
         output = process.communicate()[0]
-        config.log.info(f"Git pull output:\t{output}")
+        config.log.info(f"Git clone output:\t{output}")
         self.anidb = json.loads(open(Path(f"/config/anime-offline-database/anime-offline-database-minified.json")).read())["data"]
         self.aggregate = list()
         self.drop_tags = config.file["tagging"].get("drop", [])
