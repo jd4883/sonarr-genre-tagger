@@ -67,12 +67,15 @@ class Config:
 		[show.tags.remove(i) for i in show.tags if i in self.shows.drop_tags]
 		show.tag_ids = unique([i.get("id") for i in self.shows.tags if (i.get("label") in show.tags)])
 		show.sonarr.update({"tags": show.tag_ids})
-		try:
-			self.log.info(f"Tagging has started for {show.title}:\t{show.tags}")
-			self.log.debug(self.sonarr.update_series(series_id=show.id, data=show.sonarr))
-			self.log.info(f"Tagging has completed for {show.title}")
-		except:
-			pass
+		self.log.info(f"Tagging has started for {show.title}:\t{show.tags}")
+		self.log.debug(self.sonarr.update_series(series_id=show.id, data=show.sonarr))
+		self.log.info(f"Tagging has completed for {show.title}")
+		# try:
+		# 	self.log.info(f"Tagging has started for {show.title}:\t{show.tags}")
+		# 	self.log.debug(self.sonarr.update_series(series_id=show.id, data=show.sonarr))
+		# 	self.log.info(f"Tagging has completed for {show.title}")
+		# except:
+		# 	pass
 
 def cleanup_tags(tag: str, replacements: dict):
 	tag = tag.lower()
