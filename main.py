@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 from methods.sonarr_api import Sonarr
 from pathlib import Path
+import json
+import logging
 import os
+import subprocess
+import yaml
 
+		
 class Shows(object):
 	def __init__(self, config: object):
-		import json
-		import subprocess
 		self.tags = config.sonarr.get_tags()
 		self.series = config.sonarr.get_series()
 		self.repo = "https://github.com/manami-project/anime-offline-database.git"
@@ -30,8 +33,6 @@ class Show(object):
 
 class Config:
 	def __init__(self, config_file="/config/config.yaml"):
-		import yaml
-		import logging
 		self.file = yaml.load(open(config_file), Loader=yaml.FullLoader) if os.path.exists(Path(config_file)) else {"tagging": {"drop": [], "replacements": {}}}
 		self.log = logging
 		self.log.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
@@ -53,6 +54,7 @@ class Config:
 			show.tags = unique([cleanup_tags(tag=i, replacements=self.shows.replacement_tags) for i in sorted(list(set(show.tags)))])
 			self.shows.aggregate.append(show)
 			self.write_tags(show)
+		self.log.info("Work Complete")
 
 	def write_tags(self, show):
 		self.log.info(f"Processing tags for {show.title}")
