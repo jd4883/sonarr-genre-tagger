@@ -39,7 +39,7 @@ class Sonarr(object):
 
 	def get_series(self):
 		# return self.sonarr_api_request(f"{self.host_url}/{self.api_suffix}/series")
-		return self.api.all_series()
+		return self.api.get_series()
 
 	def get_tags(self):
 		return self.sonarr_api_request(f"{self.host_url}/{self.api_suffix}/tag")
