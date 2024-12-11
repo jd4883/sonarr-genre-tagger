@@ -38,7 +38,7 @@ class Sonarr(object):
 		return self.api.create_tag(label=tag)
 
 	def get_series(self):
-		return self.sonarr_api_request(f"{self.host_url}/api/v3/series) 
+		return self.sonarr_api_request(f"{self.host_url}/api/v3/series") 
 		# ?includeSeasonImages=false")
 		# return self.api.get_series()
 
