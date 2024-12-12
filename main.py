@@ -60,23 +60,22 @@ class Config:
 		self.log.info(f"Processing tags for {show.title}")
 		show.sonarr = [tvShow for tvShow in self.shows.series if tvShow["title"]==show.title][0]
 		add_tags(tags=aggregate_tags(drop_tags=self.shows.drop_tags, input_tags=show.tags), tagmap=self.sonarr.get_tags(), sonarr=self.sonarr)
-		self.shows.tags = self.sonarr.get_tags()
-		# try:
-		# 	self.shows.tags = self.sonarr.get_tags()
-		# except:
-		# 	self.shows.tags = previous_tags
+		try:
+			self.shows.tags = self.sonarr.get_tags()
+		except:
+			self.shows.tags = previous_tags
 		[show.tags.remove(i) for i in show.tags if i in self.shows.drop_tags]
 		show.tag_ids = unique([i.get("id") for i in self.shows.tags if (i.get("label") in show.tags)])
 		show.sonarr.update({"tags": show.tag_ids})
 		self.log.info(f"Tagging has started for {show.title}:\t{show.tags}")
 		self.log.info(self.sonarr.update_series(series_id=show.id, data=show.sonarr))
 		self.log.info(f"Tagging has completed for {show.title}")
-		# try:
-		# 	self.log.info(f"Tagging has started for {show.title}:\t{show.tags}")
-		# 	self.log.debug(self.sonarr.update_series(series_id=show.id, data=show.sonarr))
-		# 	self.log.info(f"Tagging has completed for {show.title}")
-		# except:
-		# 	pass
+		try:
+			self.log.info(f"Tagging has started for {show.title}:\t{show.tags}")
+			self.log.debug(self.sonarr.update_series(series_id=show.id, data=show.sonarr))
+			self.log.info(f"Tagging has completed for {show.title}")
+		except:
+			pass
 
 def cleanup_tags(tag: str, replacements: dict):
 	tag = tag.lower()
